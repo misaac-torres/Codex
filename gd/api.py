@@ -106,25 +106,33 @@ def landing_page():
 
     highlight_cards = [
         {
-            "title": "Carga de proyectos",
-            "body": "Envía un proyecto con dependencias en un solo POST y obtén el ID generado",
+            "title": "Alta de proyectos",
+            "body": "Registrar iniciativas con dependencias P/L por célula, tren o CoE en un único POST.",
             "endpoint": "/projects",
         },
         {
-            "title": "Resumen ejecutivo",
-            "body": "Consulta el estado consolidado de un proyecto y sus dependencias con una sola llamada",
-            "endpoint": "/projects/{nombre}",
-        },
-        {
-            "title": "Seguimiento continuo",
-            "body": "Actualiza avance y estimados directamente sobre la fila del Excel",
+            "title": "Consulta y edición",
+            "body": "Consultar el estado consolidado y actualizar avances o estimados por fila del Excel.",
             "endpoint": "/projects/{row}",
         },
         {
             "title": "Métricas",
-            "body": "Obtén KPIs agregados por célula, tren o CoE basados en los catálogos activos",
+            "body": "KPIs agregados por catálogo activo, con cobertura L/P y avance promedio.",
             "endpoint": "/metrics",
         },
+        {
+            "title": "Sugerencias",
+            "body": "Captura feedback para la hoja `Sugerencias` desde cualquier integración.",
+            "endpoint": "/suggestions",
+        },
+    ]
+
+    legacy_tabs = [
+        {"title": "Consulta / edición", "copy": "Cobertura de dependencias y actualización de avance."},
+        {"title": "Métricas", "copy": "Visión agregada por Tren y Célula, con gráfico L/P."},
+        {"title": "Mesa Expertos", "copy": "Priorización de proyectos por contribución y dependencias."},
+        {"title": "Mesa PO Sync", "copy": "Evaluación ágil con rating 1–5 para proyectos priorizados."},
+        {"title": "Feedback", "copy": "Panel conectado a la hoja Sugerencias para mejoras y bugs."},
     ]
 
     stats = {
@@ -143,6 +151,16 @@ def landing_page():
         </div>
         """
         for card in highlight_cards
+    )
+
+    tabs_html = "".join(
+        f"""
+        <div class='tab'>
+            <div class='tab-title'>{tab['title']}</div>
+            <div class='tab-copy'>{tab['copy']}</div>
+        </div>
+        """
+        for tab in legacy_tabs
     )
 
     stats_html = "".join(
@@ -169,10 +187,10 @@ def landing_page():
             }}
             * {{ box-sizing: border-box; font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif; }}
             body {{ margin: 0; color: #0f172a; background: #f5f7fb; }}
-            header {{ background: {gradient}; color: #f8fafc; padding: 64px 24px 80px; }}
-            .content {{ max-width: 1100px; margin: 0 auto; }}
+            header {{ background: {gradient}; color: #f8fafc; padding: 64px 24px 88px; }}
+            .content {{ max-width: 1180px; margin: 0 auto; }}
             h1 {{ font-size: 40px; margin: 0 0 12px; letter-spacing: -0.5px; }}
-            p.lead {{ font-size: 18px; max-width: 720px; line-height: 1.6; margin: 0 0 24px; color: #e2e8f0; }}
+            p.lead {{ font-size: 18px; max-width: 780px; line-height: 1.6; margin: 0 0 24px; color: #e2e8f0; }}
             .pill {{ display: inline-block; padding: 10px 14px; border-radius: 12px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 12px; }}
             .actions {{ display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }}
             .button {{ display: inline-flex; gap: 8px; align-items: center; background: #ffffff; color: var(--navy); padding: 12px 16px; border-radius: 12px; border: none; font-weight: 700; text-decoration: none; box-shadow: 0 20px 40px rgba(0,0,0,0.12); transition: transform 150ms ease, box-shadow 150ms ease; }}
@@ -191,6 +209,12 @@ def landing_page():
             .stat {{ background: linear-gradient(145deg, rgba(0,169,224,0.1), rgba(11,30,61,0.08)); border: 1px solid rgba(0,169,224,0.25); border-radius: 12px; padding: 14px 16px; }}
             .stat-value {{ font-weight: 800; font-size: 24px; color: var(--navy); }}
             .stat-label {{ color: #0f172a; opacity: 0.7; text-transform: capitalize; }}
+            .tabs {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 10px; }}
+            .tab {{ border: 1px dashed #cbd5e1; border-radius: 14px; padding: 12px 14px; background: #f8fafc; }}
+            .tab-title {{ font-weight: 700; color: var(--navy); margin-bottom: 6px; }}
+            .tab-copy {{ color: #334155; line-height: 1.4; }}
+            .chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }}
+            .chip {{ background: rgba(11,30,61,0.08); color: #0b1e3d; padding: 8px 10px; border-radius: 12px; font-weight: 600; font-size: 13px; border: 1px solid rgba(0,169,224,0.35); }}
             footer {{ text-align: center; padding: 24px; color: #475569; font-size: 14px; }}
             @media (max-width: 720px) {{
                 header {{ padding: 48px 20px 70px; }}
@@ -204,8 +228,8 @@ def landing_page():
         <header>
             <div class='content'>
                 <div class='pill'>Front de usuario · Telefónica</div>
-                <h1>Gestiona el flujo GD con un solo clic</h1>
-                <p class='lead'>Lanza el backend heredado de GDv1, consume catálogos y actualiza proyectos directamente desde Swagger UI. Todo con el estilo corporativo y una experiencia limpia para equipos ágiles.</p>
+                <h1>Codex · GD_v1 — Gestión de Dependencias TI</h1>
+                <p class='lead'>Hereda la experiencia del notebook GDv1 con un front listo para operar: registra dependencias P/L por célula, consulta métricas y prioriza proyectos desde Swagger UI o cualquier cliente HTTP.</p>
                 <div class='actions'>
                     <a class='button' href='/docs'>Ir a Swagger UI</a>
                     <a class='button secondary' href='/health'>Ver estado inmediato</a>
@@ -218,8 +242,25 @@ def landing_page():
         </section>
 
         <section class='section content'>
+            <h2>Flujo funcional heredado</h2>
+            <p>Los capítulos del notebook original viven como endpoints que puedes consumir desde tu UI o scripts de automatización.</p>
+            <div class='tabs'>
+                {tabs_html}
+            </div>
+            <div class='chips'>
+                <div class='chip'>Alta de proyectos</div>
+                <div class='chip'>Consulta / edición</div>
+                <div class='chip'>Métricas agregadas</div>
+                <div class='chip'>Mesa de Expertos</div>
+                <div class='chip'>Mesa PO Sync</div>
+                <div class='chip'>Feedback y sugerencias</div>
+            </div>
+        </section>
+
+        <section class='section content'>
             <h2>Despliegue en un clic</h2>
-            <p>Ejecuta <code>./deploy_test_env.sh</code> para preparar dependencias, levantar el servidor y abrir Swagger UI. La página de inicio permanece disponible en <code>/</code> para guiar a cualquier usuario.</p>
+            <p>Ejecuta <code>./deploy_test_env.sh</code> para preparar dependencias, levantar el servidor y abrir Swagger UI. Si sólo necesitas el front de usuario, <code>./deploy_user_front.sh</code> sirve la landing y la documentación con branding Telefónica.</p>
+            <p>Para mantener compatibilidad con el Excel corporativo puedes exportar las mismas hojas (<code>ProyectosTI</code>, <code>Datos</code>, <code>Sugerencias</code>) y apuntar la variable de entorno <code>GD_EXCEL_PATH</code> al archivo vigente.</p>
             <div class='stats'>
                 {stats_html}
             </div>

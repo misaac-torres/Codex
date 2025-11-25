@@ -33,8 +33,8 @@ python -m pip install -r "$ROOT_DIR/requirements.txt"
 
 # Configure workbook/logo paths if not already set
 export GD_EXCEL_PATH="${GD_EXCEL_PATH:-"$ROOT_DIR/GD_v1.xlsx"}"
-if [ -z "${GD_LOGO_PATH:-}" ] && [ -f "$ROOT_DIR/Telefonica logo.png" ]; then
-  export GD_LOGO_PATH="$ROOT_DIR/Telefonica logo.png"
+if [ -z "${GD_LOGO_PATH:-}" ] && [ -f "$ROOT_DIR/gd/static/telefonica-favicon.svg" ]; then
+  export GD_LOGO_PATH="$ROOT_DIR/gd/static/telefonica-favicon.svg"
 fi
 
 # Show active paths for confirmation

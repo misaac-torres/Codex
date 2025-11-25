@@ -171,9 +171,6 @@ def landing_page():
         for label, value in catalog_counts.items()
     )
 
-    if not stats_ready:
-        stats_html = "<p class='empty'>Catálogos no cargados todavía. Verifica la ruta a GD_v1.xlsx.</p>"
-
     tabs_html = "".join(
         f"<span class='tab-chip'>{tab}</span>" for tab in legacy_tabs
     )
@@ -279,6 +276,7 @@ def landing_page():
         <section class='section content'>
             <h2>Despliegue en un clic</h2>
             <p>Ejecuta <code>./deploy_test_env.sh</code> para preparar dependencias, levantar el servidor y abrir Swagger UI. La página de inicio permanece disponible en <code>/</code> para guiar a cualquier usuario.</p>
+            {'<p class="empty">Catálogos no cargados todavía. Verifica la ruta a GD_v1.xlsx; los KPIs muestran guiones hasta que se conecte el archivo.</p>' if not stats_ready else ''}
             <div class='stats'>
                 {stats_html}
             </div>

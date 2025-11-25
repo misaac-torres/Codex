@@ -4,7 +4,13 @@ from __future__ import annotations
 from openpyxl.utils import column_index_from_string
 
 from .config import COLS, EXCEL_PATH, START_ROW_PROYECTOS
-from .excel import find_column_by_header_in_range, get_header_row_proyectos, load_workbook, to_num_cell
+from .excel import (
+    find_column_by_header_in_range,
+    get_header_row_proyectos,
+    get_ws_proyectos,
+    load_workbook,
+    to_num_cell,
+)
 
 
 def compute_metrics(scope: str = "all", filter_value: str | None = None, dep_mapping: dict | None = None, celula_tren_map: dict | None = None, path=EXCEL_PATH):

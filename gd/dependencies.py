@@ -1,7 +1,7 @@
 """Dependency helpers for applying and aggregating flags/descriptions."""
 from __future__ import annotations
 
-from typing import Iterable, List, Sequence
+from typing import Sequence
 
 from openpyxl.utils import column_index_from_string
 

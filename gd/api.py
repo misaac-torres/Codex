@@ -393,7 +393,7 @@ def landing_page():
                 const nombre = document.getElementById('get-nombre').value;
                 const resultEl = document.getElementById('project-result');
                 try {
-                    const resp = await fetch(`/projects/${{encodeURIComponent(nombre)}}`);
+                    const resp = await fetch(`/projects/${encodeURIComponent(nombre)}`);
                     const data = await resp.json();
                     resultEl.textContent = JSON.stringify(data, null, 2);
                 } catch (err) {
@@ -413,7 +413,7 @@ def landing_page():
                         dependencias,
                     };
                 },
-                `/projects/${{document.getElementById('update-row').value}}`,
+                `/projects/${document.getElementById('update-row').value}`,
                 'PATCH',
                 'project-result'
             ));
@@ -426,7 +426,7 @@ def landing_page():
                 if (filter) params.append('filter_value', filter);
                 const resultEl = document.getElementById('metrics-result');
                 try {
-                    const resp = await fetch(`/metrics?${{params.toString()}}`);
+                    const resp = await fetch(`/metrics?${params.toString()}`);
                     const data = await resp.json();
                     resultEl.textContent = JSON.stringify(data, null, 2);
                 } catch (err) {

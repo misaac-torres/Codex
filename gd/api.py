@@ -98,6 +98,12 @@ def _require_dep_mapping():
     return _catalogs.dependency_mapping
 
 
+def _wrap_excel_error(exc: Exception, action: str) -> HTTPException:
+    """Provide consistent HTTP errors when Excel operations fail."""
+    detail = f"No se pudo {action}: {exc}"
+    return HTTPException(status_code=500, detail=detail)
+
+
 @app.get("/", response_class=HTMLResponse)
 def landing_page():
     primary = "#00a9e0"  # Telefónica blue
@@ -371,7 +377,10 @@ def get_catalogs():
 def create_project(payload: ProjectPayload):
     dep_mapping = _require_dep_mapping()
     dep_models = payload.dependency_models()
-    row, proj_id = projects.write_project_with_dependencies(payload.to_model(), dep_models, dep_mapping)
+    try:
+        row, proj_id = projects.write_project_with_dependencies(payload.to_model(), dep_models, dep_mapping)
+    except Exception as exc:  # pragma: no cover - runtime Excel safety
+        raise _wrap_excel_error(exc, "crear el proyecto")
     return {"row": row, "id": proj_id}
 
 
@@ -386,20 +395,40 @@ def get_project(nombre: str):
 def update_project(row: int, payload: UpdatePayload):
     dep_mapping = _require_dep_mapping()
     dep_models = payload.dependency_models()
-    return projects.update_project_row_and_dependencies(row, payload.avance, payload.estimado, dep_models, dep_mapping)
+    try:
+        return projects.update_project_row_and_dependencies(
+            row, payload.avance, payload.estimado, dep_models, dep_mapping
+        )
+    except Exception as exc:  # pragma: no cover - runtime Excel safety
+        raise _wrap_excel_error(exc, "actualizar el proyecto")
 
 
 @app.get("/metrics")
 def get_metrics(scope: str = "all", filter_value: Optional[str] = None):
-    return metrics.compute_metrics(
-        scope=scope,
-        filter_value=filter_value,
-        dep_mapping=_catalogs.dependency_mapping,
-        celula_tren_map=_catalogs.celula_tren_map,
-    )
+    try:
+        return metrics.compute_metrics(
+            scope=scope,
+            filter_value=filter_value,
+            dep_mapping=_catalogs.dependency_mapping,
+            celula_tren_map=_catalogs.celula_tren_map,
+        )
+    except Exception as exc:  # pragma: no cover - runtime Excel safety
+        raise _wrap_excel_error(exc, "calcular métricas")
 
 
 @app.post("/suggestions")
-def send_suggestion(payload: SuggestionPayload):
-    suggestions.append_suggestion(payload.usuario, payload.texto)
+def create_suggestion(payload: SuggestionPayload):
+    try:
+        suggestions.append_suggestion(payload.usuario, payload.texto)
+    except Exception as exc:  # pragma: no cover - runtime Excel safety
+        raise _wrap_excel_error(exc, "guardar la sugerencia")
     return {"status": "ok"}
+
+
+@app.get("/suggestions")
+def list_suggestions(limit: int = 5):
+    try:
+        return suggestions.get_last_suggestions(limit=limit)
+    except Exception as exc:  # pragma: no cover - runtime Excel safety
+        raise _wrap_excel_error(exc, "leer las sugerencias")
+

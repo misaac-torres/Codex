@@ -24,7 +24,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The `/docs` route now delivers an attractive Telefónica-styled Swagger UI with a short hero banner inspired by the legacy GDv1 experience; once the server is running you can navigate there for a one-click, try-it-out friendly front end. The root path `/` complements it with a Telefónica-branded landing page that mirrors the original GDv1 tabs (Alta de proyectos, Consulta/edición, Métricas, Mesas y Feedback) so stakeholders can quickly understand the flow before opening Swagger UI.
+Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The `/docs` route now delivers an attractive Telefónica-styled Swagger UI with a short hero banner inspired by the legacy GDv1 experience; once the server is running you can navigate there for a one-click, try-it-out friendly front end. The root path `/` complements it with a Telefónica-branded landing page that mirrors the original GDv1 tabs (Alta de proyectos, Consulta/edición, Métricas, Mesas y Feedback) so stakeholders can quickly understand the flow before opening Swagger UI. When the Excel file is unavailable, the landing surface now shows a clear warning instead of empty catalog counts.
 
 ### One-click test environment
 Run the included helper to provision dependencies and start the FastAPI server in one step:

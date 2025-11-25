@@ -136,11 +136,16 @@ def landing_page():
         },
     ]
 
-    stats = {
+    catalog_counts = {
+        "estados": len(_catalogs.estados),
+        "q radicado": len(_catalogs.q_rad),
+        "responsables": len(_catalogs.responsables),
+        "áreas": len(_catalogs.areas),
         "dependencias": len(_catalogs.dependency_mapping),
         "células": len(_catalogs.celula_tren_map),
-        "catálogos": len(_catalogs.__dict__),
     }
+    stats = {k: v for k, v in catalog_counts.items() if v}
+    stats_ready = bool(stats)
 
     cards_html = "".join(
         f"""
@@ -162,7 +167,7 @@ def landing_page():
         </div>
         """
         for label, value in stats.items()
-    )
+    ) or "<p class='empty'>Catálogos no cargados todavía. Verifica la ruta a GD_v1.xlsx.</p>"
 
     tabs_html = "".join(
         f"<span class='tab-chip'>{tab}</span>" for tab in legacy_tabs
@@ -211,6 +216,7 @@ def landing_page():
             .stat {{ background: linear-gradient(145deg, rgba(0,169,224,0.1), rgba(11,30,61,0.08)); border: 1px solid rgba(0,169,224,0.25); border-radius: 12px; padding: 14px 16px; }}
             .stat-value {{ font-weight: 800; font-size: 24px; color: var(--navy); }}
             .stat-label {{ color: #0f172a; opacity: 0.7; text-transform: capitalize; }}
+            .empty {{ margin: 0; color: #475569; }}
             .tab-chips {{ display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }}
             .tab-chip {{ background: rgba(0,169,224,0.12); color: var(--navy); border: 1px solid rgba(0,169,224,0.35); padding: 8px 12px; border-radius: 10px; font-weight: 600; font-size: 13px; }}
             .two-col {{ display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 12px; }}
@@ -239,15 +245,15 @@ def landing_page():
                 <div class='hero-meta'>
                     <div class='meta-card'>
                         <strong>Catálogos activos</strong>
-                        <span>{len(_catalogs.__dict__)}</span>
+                        <span>{len(stats) if stats_ready else '–'}</span>
                     </div>
                     <div class='meta-card'>
                         <strong>Equipos en mapeo</strong>
-                        <span>{len(_catalogs.celula_tren_map)}</span>
+                        <span>{catalog_counts['células'] or '–'}</span>
                     </div>
                     <div class='meta-card'>
                         <strong>Dependencias conocidas</strong>
-                        <span>{len(_catalogs.dependency_mapping)}</span>
+                        <span>{catalog_counts['dependencias'] or '–'}</span>
                     </div>
                 </div>
             </div>

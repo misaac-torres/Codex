@@ -25,6 +25,17 @@ pip install -r requirements.txt
 
 Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`.
 
+### One-click test environment
+Run the included helper to provision dependencies and start the FastAPI server in one step:
+```bash
+./deploy_test_env.sh
+```
+Optional environment variables:
+- `VENV_DIR` → override the virtualenv location (default: `.venv` at the repo root)
+- `PYTHON_BIN` → choose which Python interpreter to use (default: `python3`)
+- `PORT` → change the exposed port (default: `8000`)
+- `GD_EXCEL_PATH`/`GD_LOGO_PATH` → override workbook and logo paths (auto-detected if not set)
+
 ### Troubleshooting
 - **`ModuleNotFoundError: No module named 'uvicorn'`**
   - Make sure you install dependencies with the same interpreter you plan to run: `python -m pip install -r requirements.txt` (repeat after activating `.venv`).

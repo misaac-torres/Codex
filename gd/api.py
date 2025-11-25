@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -82,6 +83,17 @@ class SuggestionPayload(BaseModel):
 STATIC_DIR = Path(__file__).parent / "static"
 
 app = FastAPI(title="GD Excel API", version="1.0.0", docs_url=None, redoc_url=None)
+# Allow the React UI (Vite dev server) to consume the API directly from the browser.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Serve the Telefónica-themed Swagger assets (CSS + SVG favicon) alongside the API.
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 

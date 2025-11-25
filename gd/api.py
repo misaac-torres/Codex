@@ -80,6 +80,7 @@ class SuggestionPayload(BaseModel):
 
 
 STATIC_DIR = Path(__file__).parent / "static"
+USER_FRONT_PATH = STATIC_DIR / "user-front.html"
 
 app = FastAPI(title="GD Excel API", version="1.0.0", docs_url=None, redoc_url=None)
 # Serve the Telefónica-themed Swagger assets (CSS + SVG favicon) alongside the API.
@@ -232,6 +233,7 @@ def landing_page():
                 <p class='lead'>Hereda la experiencia del notebook GDv1 con un front listo para operar: registra dependencias P/L por célula, consulta métricas y prioriza proyectos desde Swagger UI o cualquier cliente HTTP.</p>
                 <div class='actions'>
                     <a class='button' href='/docs'>Ir a Swagger UI</a>
+                    <a class='button' href='/front'>Abrir front interactivo</a>
                     <a class='button secondary' href='/health'>Ver estado inmediato</a>
                 </div>
             </div>
@@ -272,6 +274,14 @@ def landing_page():
     </body>
     </html>
     """
+
+
+@app.get("/front", response_class=HTMLResponse, include_in_schema=False)
+def interactive_front():
+    if USER_FRONT_PATH.exists():
+        return HTMLResponse(USER_FRONT_PATH.read_text(encoding="utf-8"))
+    raise HTTPException(status_code=500, detail="No se encontró la UI interactiva.")
+
 
 @app.get("/health")
 def health():

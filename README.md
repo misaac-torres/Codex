@@ -27,7 +27,7 @@ pip install -r requirements.txt
 #### codex/create-attractive-user-front-ui-smyqav
 Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The `/docs` route now delivers an attractive Telefónica-styled Swagger UI with a short hero banner inspired by the legacy GDv1 experience; once the server is running you can navigate there for a one-click, try-it-out friendly front end.
 =======
-Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The root path `/` now delivers an attractive Telefónica-branded landing page with quick links to Swagger UI and deployment guidance so users can launch the API experience in one click.
+Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The root path `/` now delivers an attractive Telefónica-branded landing page with quick links to Swagger UI and deployment guidance so users can launch the API experience in one click. The new `/front` route ships an interactive UI (HTML + JS) to operar el flujo GDv1 desde el navegador: consulta proyectos, crea filas con dependencias, actualiza métricas y envía sugerencias sin salir del puerto 8000.
 #### main
 
 ### One-click test environment

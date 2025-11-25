@@ -173,7 +173,7 @@ def landing_page():
         for label, value in stats.items()
     )
 
-    return f"""
+    html = """
     <!DOCTYPE html>
     <html lang='es'>
     <head>
@@ -216,6 +216,15 @@ def landing_page():
             .chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }}
             .chip {{ background: rgba(11,30,61,0.08); color: #0b1e3d; padding: 8px 10px; border-radius: 12px; font-weight: 600; font-size: 13px; border: 1px solid rgba(0,169,224,0.35); }}
             footer {{ text-align: center; padding: 24px; color: #475569; font-size: 14px; }}
+            .form-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: 14px; }}
+            .form-card {{ background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; box-shadow: 0 12px 30px rgba(9,20,66,0.05); }}
+            .form-card h3 {{ margin-top: 0; color: var(--navy); margin-bottom: 10px; }}
+            .form-card label {{ display: block; font-weight: 600; margin: 10px 0 6px; color: #0f172a; }}
+            .form-card input, .form-card textarea, .form-card select {{ width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 14px; font-family: inherit; background: #fff; }}
+            .form-card textarea {{ min-height: 80px; resize: vertical; }}
+            .form-card button {{ margin-top: 12px; background: var(--primary); color: white; border: none; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; box-shadow: 0 8px 20px rgba(0,169,224,0.25); }}
+            .form-card button:hover {{ background: #008bc0; }}
+            .result {{ background: #0b1e3d; color: #e0f2fe; border-radius: 12px; padding: 10px 12px; font-family: "JetBrains Mono", "SFMono-Regular", ui-monospace, monospace; font-size: 13px; margin-top: 12px; white-space: pre-wrap; max-height: 220px; overflow: auto; }}
             @media (max-width: 720px) {{
                 header {{ padding: 48px 20px 70px; }}
                 h1 {{ font-size: 32px; }}
@@ -258,6 +267,77 @@ def landing_page():
         </section>
 
         <section class='section content'>
+            <h2>Panel interactivo (modo local)</h2>
+            <p>Opera la API como en el front legado: prueba altas, consultas y métricas sin salir de la landing. Los formularios llaman al backend que corre en este mismo puerto (8000 por defecto).</p>
+            <div class='form-grid'>
+                <div class='form-card'>
+                    <h3>Alta de proyecto</h3>
+                    <form id='create-project-form'>
+                        <label for='proj-nombre'>Nombre</label>
+                        <input id='proj-nombre' name='nombre' placeholder='Nombre del proyecto' required />
+                        <label for='proj-responsable'>Responsable</label>
+                        <input id='proj-responsable' name='responsable' placeholder='Responsable (opcional)' />
+                        <label for='proj-avance'>Avance</label>
+                        <input id='proj-avance' name='avance' type='number' step='0.1' placeholder='Ej: 25' />
+                        <label for='proj-deps'>Dependencias (JSON)</label>
+                        <textarea id='proj-deps' name='dependencias' placeholder='Ejemplo: [{"equipo": "Célula A", "codigo": "P"}]'></textarea>
+                        <button type='submit'>Registrar proyecto</button>
+                    </form>
+                    <pre class='result' id='create-project-result'>Esperando envío…</pre>
+                </div>
+
+                <div class='form-card'>
+                    <h3>Consulta / edición</h3>
+                    <form id='get-project-form'>
+                        <label for='get-nombre'>Nombre del proyecto</label>
+                        <input id='get-nombre' name='nombre' placeholder='Coincide con la columna Proyecto TI' required />
+                        <button type='submit'>Consultar</button>
+                    </form>
+                    <form id='update-project-form'>
+                        <label for='update-row'>Fila Excel</label>
+                        <input id='update-row' name='row' type='number' min='2' placeholder='Número de fila en ProyectosTI' required />
+                        <label for='update-avance'>Avance (%)</label>
+                        <input id='update-avance' name='avance' type='number' step='0.1' placeholder='Ej: 50' />
+                        <label for='update-estimado'>Estimado (%)</label>
+                        <input id='update-estimado' name='estimado' type='number' step='0.1' placeholder='Nuevo estimado' />
+                        <label for='update-deps'>Dependencias (JSON)</label>
+                        <textarea id='update-deps' name='dependencias' placeholder='Opcional: [{"equipo": "Célula B", "codigo": "L"}]'></textarea>
+                        <button type='submit'>Actualizar fila</button>
+                    </form>
+                    <pre class='result' id='project-result'>Esperando consulta…</pre>
+                </div>
+
+                <div class='form-card'>
+                    <h3>Métricas rápidas</h3>
+                    <form id='metrics-form'>
+                        <label for='metrics-scope'>Scope</label>
+                        <select id='metrics-scope' name='scope'>
+                            <option value='all'>all</option>
+                            <option value='tren'>tren</option>
+                            <option value='celula'>celula</option>
+                        </select>
+                        <label for='metrics-filter'>Filtro (opcional)</label>
+                        <input id='metrics-filter' name='filter_value' placeholder='Nombre de tren o célula' />
+                        <button type='submit'>Obtener métricas</button>
+                    </form>
+                    <pre class='result' id='metrics-result'>Esperando consulta…</pre>
+                </div>
+
+                <div class='form-card'>
+                    <h3>Sugerencias</h3>
+                    <form id='suggestion-form'>
+                        <label for='sug-usuario'>Usuario</label>
+                        <input id='sug-usuario' name='usuario' placeholder='Opcional' />
+                        <label for='sug-texto'>Mensaje</label>
+                        <textarea id='sug-texto' name='texto' required placeholder='Comparte tu feedback como en la hoja Sugerencias'></textarea>
+                        <button type='submit'>Enviar sugerencia</button>
+                    </form>
+                    <pre class='result' id='suggestion-result'>Esperando envío…</pre>
+                </div>
+            </div>
+        </section>
+
+        <section class='section content'>
             <h2>Despliegue en un clic</h2>
             <p>Ejecuta <code>./deploy_test_env.sh</code> para preparar dependencias, levantar el servidor y abrir Swagger UI. Si sólo necesitas el front de usuario, <code>./deploy_user_front.sh</code> sirve la landing y la documentación con branding Telefónica.</p>
             <p>Para mantener compatibilidad con el Excel corporativo puedes exportar las mismas hojas (<code>ProyectosTI</code>, <code>Datos</code>, <code>Sugerencias</code>) y apuntar la variable de entorno <code>GD_EXCEL_PATH</code> al archivo vigente.</p>
@@ -269,9 +349,119 @@ def landing_page():
         <footer>
             Inspirado en el legado de GDv1, optimizado para experiencias rápidas y profesionales.
         </footer>
+
+        <script>
+            async function submitJson(event, buildPayload, endpoint, method = 'POST', resultId = '') {
+                event.preventDefault();
+                const resultEl = document.getElementById(resultId);
+                try {
+                    const payload = buildPayload();
+                    const response = await fetch(endpoint, {
+                        method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: method === 'GET' ? undefined : JSON.stringify(payload),
+                    });
+                    const data = await response.json();
+                    resultEl.textContent = JSON.stringify(data, null, 2);
+                } catch (err) {
+                    resultEl.textContent = 'Error: ' + err;
+                }
+            }
+
+            document.getElementById('create-project-form').addEventListener('submit', (event) => submitJson(
+                event,
+                () => {
+                    let dependencias = [];
+                    const rawDeps = document.getElementById('proj-deps').value.trim();
+                    if (rawDeps) {
+                        dependencias = JSON.parse(rawDeps);
+                    }
+                    return {
+                        nombre: document.getElementById('proj-nombre').value,
+                        responsable: document.getElementById('proj-responsable').value || null,
+                        avance: document.getElementById('proj-avance').value || null,
+                        dependencias,
+                    };
+                },
+                '/projects',
+                'POST',
+                'create-project-result'
+            ));
+
+            document.getElementById('get-project-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const nombre = document.getElementById('get-nombre').value;
+                const resultEl = document.getElementById('project-result');
+                try {
+                    const resp = await fetch(`/projects/${{encodeURIComponent(nombre)}}`);
+                    const data = await resp.json();
+                    resultEl.textContent = JSON.stringify(data, null, 2);
+                } catch (err) {
+                    resultEl.textContent = 'Error: ' + err;
+                }
+            });
+
+            document.getElementById('update-project-form').addEventListener('submit', (event) => submitJson(
+                event,
+                () => {
+                    let dependencias = [];
+                    const rawDeps = document.getElementById('update-deps').value.trim();
+                    if (rawDeps) { dependencias = JSON.parse(rawDeps); }
+                    return {
+                        avance: document.getElementById('update-avance').value || null,
+                        estimado: document.getElementById('update-estimado').value || null,
+                        dependencias,
+                    };
+                },
+                `/projects/${{document.getElementById('update-row').value}}`,
+                'PATCH',
+                'project-result'
+            ));
+
+            document.getElementById('metrics-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const scope = document.getElementById('metrics-scope').value;
+                const filter = document.getElementById('metrics-filter').value;
+                const params = new URLSearchParams({ scope });
+                if (filter) params.append('filter_value', filter);
+                const resultEl = document.getElementById('metrics-result');
+                try {
+                    const resp = await fetch(`/metrics?${{params.toString()}}`);
+                    const data = await resp.json();
+                    resultEl.textContent = JSON.stringify(data, null, 2);
+                } catch (err) {
+                    resultEl.textContent = 'Error: ' + err;
+                }
+            });
+
+            document.getElementById('suggestion-form').addEventListener('submit', (event) => submitJson(
+                event,
+                () => ({
+                    usuario: document.getElementById('sug-usuario').value,
+                    texto: document.getElementById('sug-texto').value,
+                }),
+                '/suggestions',
+                'POST',
+                'suggestion-result'
+            ));
+        </script>
     </body>
     </html>
     """
+
+    replacements = {
+        "primary": primary,
+        "navy": navy,
+        "gradient": gradient,
+        "cards_html": cards_html,
+        "tabs_html": tabs_html,
+        "stats_html": stats_html,
+    }
+
+    for key, value in replacements.items():
+        html = html.replace(f"{{{key}}}", value)
+
+    return html
 
 @app.get("/health")
 def health():

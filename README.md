@@ -23,7 +23,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`.
+Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The root path `/` now delivers an attractive Telefónica-branded landing page with quick links to Swagger UI and deployment guidance so users can launch the API experience in one click.
 
 ### One-click test environment
 Run the included helper to provision dependencies and start the FastAPI server in one step:

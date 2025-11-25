@@ -6,10 +6,7 @@ from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
-### codex/create-attractive-user-front-ui-smyqav
 from fastapi.staticfiles import StaticFiles
-=======
-### main
 from pydantic import BaseModel, Field
 
 from . import catalogs, config, metrics, projects, suggestions

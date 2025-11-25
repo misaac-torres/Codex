@@ -104,33 +104,42 @@ def landing_page():
     navy = "#0b1e3d"
     gradient = "linear-gradient(135deg, #0b1e3d 0%, #032d60 40%, #00a9e0 100%)"
 
+    legacy_tabs = [
+        "Alta proyectos",
+        "Consulta / edición",
+        "Métricas",
+        "Mesa Expertos",
+        "Mesa PO Sync",
+        "Feedback",
+    ]
+
     highlight_cards = [
         {
             "title": "Carga de proyectos",
-            "body": "Envía un proyecto con dependencias en un solo POST y obtén el ID generado",
+            "body": "Envía un proyecto con dependencias en un solo POST y obtén el ID generado.",
             "endpoint": "/projects",
         },
         {
-            "title": "Resumen ejecutivo",
-            "body": "Consulta el estado consolidado de un proyecto y sus dependencias con una sola llamada",
-            "endpoint": "/projects/{nombre}",
-        },
-        {
             "title": "Seguimiento continuo",
-            "body": "Actualiza avance y estimados directamente sobre la fila del Excel",
+            "body": "Actualiza avance y estimados directamente sobre la fila del Excel.",
             "endpoint": "/projects/{row}",
         },
         {
+            "title": "Consulta ejecutiva",
+            "body": "Recupera estado consolidado de un proyecto y sus dependencias.",
+            "endpoint": "/projects/{nombre}",
+        },
+        {
             "title": "Métricas",
-            "body": "Obtén KPIs agregados por célula, tren o CoE basados en los catálogos activos",
+            "body": "Obtén KPIs agregados por célula, tren o CoE basados en los catálogos activos.",
             "endpoint": "/metrics",
         },
     ]
 
     stats = {
         "dependencias": len(_catalogs.dependency_mapping),
-        "celulas": len(_catalogs.celula_tren_map),
-        "catalogos": len(_catalogs.__dict__),
+        "células": len(_catalogs.celula_tren_map),
+        "catálogos": len(_catalogs.__dict__),
     }
 
     cards_html = "".join(
@@ -155,6 +164,10 @@ def landing_page():
         for label, value in stats.items()
     )
 
+    tabs_html = "".join(
+        f"<span class='tab-chip'>{tab}</span>" for tab in legacy_tabs
+    )
+
     return f"""
     <!DOCTYPE html>
     <html lang='es'>
@@ -169,33 +182,46 @@ def landing_page():
             }}
             * {{ box-sizing: border-box; font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif; }}
             body {{ margin: 0; color: #0f172a; background: #f5f7fb; }}
-            header {{ background: {gradient}; color: #f8fafc; padding: 64px 24px 80px; }}
-            .content {{ max-width: 1100px; margin: 0 auto; }}
+            header {{ background: {gradient}; color: #f8fafc; padding: 52px 24px 76px; position: relative; overflow: hidden; }}
+            header::after {{ content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 35%), radial-gradient(circle at 80% 10%, rgba(255,255,255,0.1), transparent 32%); opacity: 0.9; }}
+            .content {{ max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }}
             h1 {{ font-size: 40px; margin: 0 0 12px; letter-spacing: -0.5px; }}
-            p.lead {{ font-size: 18px; max-width: 720px; line-height: 1.6; margin: 0 0 24px; color: #e2e8f0; }}
-            .pill {{ display: inline-block; padding: 10px 14px; border-radius: 12px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 12px; }}
-            .actions {{ display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }}
+            p.lead {{ font-size: 18px; max-width: 760px; line-height: 1.6; margin: 0 0 24px; color: #e2e8f0; }}
+            .pill {{ display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 12px; }}
+            .pill::before {{ content: ""; width: 10px; height: 10px; border-radius: 999px; background: #9ef6ff; box-shadow: 0 0 0 8px rgba(158,246,255,0.15); }}
+            .actions {{ display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }}
             .button {{ display: inline-flex; gap: 8px; align-items: center; background: #ffffff; color: var(--navy); padding: 12px 16px; border-radius: 12px; border: none; font-weight: 700; text-decoration: none; box-shadow: 0 20px 40px rgba(0,0,0,0.12); transition: transform 150ms ease, box-shadow 150ms ease; }}
             .button.secondary {{ background: rgba(255,255,255,0.16); color: #f8fafc; border: 1px solid rgba(255,255,255,0.35); box-shadow: none; }}
             .button:hover {{ transform: translateY(-2px); box-shadow: 0 16px 32px rgba(0,0,0,0.18); }}
-            .grid {{ display: grid; gap: 18px; margin-top: -52px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); padding: 0 24px 60px; }}
-            .card {{ background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 12px 30px rgba(9,20,66,0.08); border: 1px solid #e2e8f0; }}
+            .hero-meta {{ display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 14px; }}
+            .meta-card {{ background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: #e2e8f0; padding: 12px 14px; border-radius: 12px; backdrop-filter: blur(4px); }}
+            .meta-card strong {{ display: block; font-size: 14px; letter-spacing: 0.4px; opacity: 0.9; }}
+            .meta-card span {{ font-size: 18px; font-weight: 800; color: #ffffff; }}
+            .grid {{ display: grid; gap: 18px; margin-top: -48px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); padding: 0 24px 60px; position: relative; z-index: 2; }}
+            .card {{ background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 16px 36px rgba(9,20,66,0.08); border: 1px solid #e2e8f0; }}
             .card h3 {{ margin: 8px 0 8px; color: var(--navy); }}
             .card p {{ margin: 0 0 12px; line-height: 1.5; color: #334155; }}
             .eyebrow {{ text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; font-size: 12px; color: var(--primary); margin: 0; }}
             .endpoint {{ background: #0b1e3d; color: #e0f2fe; padding: 10px 12px; border-radius: 10px; font-family: "JetBrains Mono", "SFMono-Regular", ui-monospace, monospace; font-size: 13px; letter-spacing: -0.2px; display: inline-block; }}
-            .section {{ background: #ffffff; margin: 0 24px 32px; padding: 22px 20px; border-radius: 16px; box-shadow: 0 12px 30px rgba(9,20,66,0.05); border: 1px solid #e2e8f0; }}
+            .section {{ background: #ffffff; margin: 0 24px 32px; padding: 22px 20px; border-radius: 16px; box-shadow: 0 14px 34px rgba(9,20,66,0.05); border: 1px solid #e2e8f0; position: relative; z-index: 2; }}
             .section h2 {{ margin: 0 0 14px; color: var(--navy); }}
             .section p {{ margin: 0 0 10px; color: #334155; }}
+            .section ul {{ margin: 0; padding-left: 20px; color: #334155; line-height: 1.55; }}
             .stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 12px; }}
             .stat {{ background: linear-gradient(145deg, rgba(0,169,224,0.1), rgba(11,30,61,0.08)); border: 1px solid rgba(0,169,224,0.25); border-radius: 12px; padding: 14px 16px; }}
             .stat-value {{ font-weight: 800; font-size: 24px; color: var(--navy); }}
             .stat-label {{ color: #0f172a; opacity: 0.7; text-transform: capitalize; }}
+            .tab-chips {{ display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }}
+            .tab-chip {{ background: rgba(0,169,224,0.12); color: var(--navy); border: 1px solid rgba(0,169,224,0.35); padding: 8px 12px; border-radius: 10px; font-weight: 600; font-size: 13px; }}
+            .two-col {{ display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 12px; }}
+            .list-card {{ background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; }}
+            .list-card h4 {{ margin: 0 0 10px; color: var(--navy); }}
+            .list-card li + li {{ margin-top: 6px; }}
             footer {{ text-align: center; padding: 24px; color: #475569; font-size: 14px; }}
             @media (max-width: 720px) {{
-                header {{ padding: 48px 20px 70px; }}
+                header {{ padding: 44px 20px 70px; }}
                 h1 {{ font-size: 32px; }}
-                .grid {{ margin-top: -44px; }}
+                .grid {{ margin-top: -36px; }}
                 .actions {{ flex-direction: column; align-items: flex-start; }}
             }}
         </style>
@@ -210,6 +236,20 @@ def landing_page():
                     <a class='button' href='/docs'>Ir a Swagger UI</a>
                     <a class='button secondary' href='/health'>Ver estado inmediato</a>
                 </div>
+                <div class='hero-meta'>
+                    <div class='meta-card'>
+                        <strong>Catálogos activos</strong>
+                        <span>{len(_catalogs.__dict__)}</span>
+                    </div>
+                    <div class='meta-card'>
+                        <strong>Equipos en mapeo</strong>
+                        <span>{len(_catalogs.celula_tren_map)}</span>
+                    </div>
+                    <div class='meta-card'>
+                        <strong>Dependencias conocidas</strong>
+                        <span>{len(_catalogs.dependency_mapping)}</span>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -218,10 +258,36 @@ def landing_page():
         </section>
 
         <section class='section content'>
+            <h2>Tabs heredados de GDv1</h2>
+            <p>La API expone la misma lógica que el notebook clásico: alta de proyectos, edición, métricas y mesas de decisión. Usa estos enlaces rápidos para navegar al catálogo y replicar la experiencia.</p>
+            <div class='tab-chips'>
+                {tabs_html}
+            </div>
+        </section>
+
+        <section class='section content'>
             <h2>Despliegue en un clic</h2>
             <p>Ejecuta <code>./deploy_test_env.sh</code> para preparar dependencias, levantar el servidor y abrir Swagger UI. La página de inicio permanece disponible en <code>/</code> para guiar a cualquier usuario.</p>
             <div class='stats'>
                 {stats_html}
+            </div>
+            <div class='two-col'>
+                <div class='list-card'>
+                    <h4>Catálogos mínimos</h4>
+                    <ul>
+                        <li>Áreas, Trenes, CoEs y mapeo de Células.</li>
+                        <li>Dependencias P/L con descripción libre.</li>
+                        <li>Iniciativas estratégicas y responsables.</li>
+                    </ul>
+                </div>
+                <div class='list-card'>
+                    <h4>Flujo recomendado</h4>
+                    <ul>
+                        <li>Levanta la app con <code>deploy_user_front.sh</code> o <code>deploy_test_env.sh</code>.</li>
+                        <li>Revisa catálogos en <code>/catalogs</code> y carga un proyecto desde <code>/projects</code>.</li>
+                        <li>Actualiza avance, estimados y rating con <code>/projects/{{'{'}}row{{'}'}}</code>.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 

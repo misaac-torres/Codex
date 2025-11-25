@@ -24,8 +24,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`.
-The `/docs` route now ships a Telefónica-styled Swagger UI with a short hero banner inspired by the legacy GDv1 experience; once the server is running you can navigate there for a one-click, try-it-out friendly front end.
+Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The `/docs` route now delivers an attractive Telefónica-styled Swagger UI with a short hero banner inspired by the legacy GDv1 experience; once the server is running you can navigate there for a one-click, try-it-out friendly front end.
 
 ### One-click test environment
 Run the included helper to provision dependencies and start the FastAPI server in one step:

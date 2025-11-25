@@ -82,6 +82,7 @@ class SuggestionPayload(BaseModel):
 STATIC_DIR = Path(__file__).parent / "static"
 
 app = FastAPI(title="GD Excel API", version="1.0.0", docs_url=None, redoc_url=None)
+# Serve the Telefónica-themed Swagger assets (CSS + SVG favicon) alongside the API.
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 try:

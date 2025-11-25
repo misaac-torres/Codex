@@ -10,9 +10,17 @@ This repository now contains a reusable Python package (`gd/`) extracted from th
   - `GD_LOGO_PATH` → optional path to the Telefónica logo image
 
 ### Using the FastAPI server
+Install dependencies before running the server (helps avoid `ModuleNotFoundError` for packages like `uvicorn`):
 ```bash
 pip install -r requirements.txt
 uvicorn gd.api:app --reload --host 0.0.0.0 --port 8000
+```
+
+If you prefer an isolated environment, create and activate a virtual environment first:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`.

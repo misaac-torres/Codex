@@ -12,7 +12,7 @@ from .models import Dependency, Project, Catalogs
 
 class DependencyPayload(BaseModel):
     equipo: str = Field(..., description="Nombre de la célula / tren / CoE")
-    codigo: str = Field(..., regex="^[PL]$", description="Flag P/L")
+    codigo: str = Field(..., pattern="^[PL]$", description="Flag P/L")
     descripcion: str = ""
 
     def to_model(self) -> Dependency:

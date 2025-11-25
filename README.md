@@ -24,7 +24,11 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+#### codex/create-attractive-user-front-ui-smyqav
 Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The `/docs` route now delivers an attractive Telefónica-styled Swagger UI with a short hero banner inspired by the legacy GDv1 experience; once the server is running you can navigate there for a one-click, try-it-out friendly front end.
+=======
+Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`. The root path `/` now delivers an attractive Telefónica-branded landing page with quick links to Swagger UI and deployment guidance so users can launch the API experience in one click.
+#### main
 
 ### One-click test environment
 Run the included helper to provision dependencies and start the FastAPI server in one step:

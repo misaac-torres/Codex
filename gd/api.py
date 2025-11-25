@@ -144,8 +144,10 @@ def landing_page():
         "dependencias": len(_catalogs.dependency_mapping),
         "células": len(_catalogs.celula_tren_map),
     }
-    stats = {k: v for k, v in catalog_counts.items() if v}
-    stats_ready = bool(stats)
+    stats_ready = any(catalog_counts.values())
+
+    def _render_value(value: int) -> str:
+        return str(value) if value else "–"
 
     cards_html = "".join(
         f"""
@@ -162,12 +164,15 @@ def landing_page():
     stats_html = "".join(
         f"""
         <div class='stat'>
-            <div class='stat-value'>{value}</div>
+            <div class='stat-value'>{_render_value(value)}</div>
             <div class='stat-label'>{label}</div>
         </div>
         """
-        for label, value in stats.items()
-    ) or "<p class='empty'>Catálogos no cargados todavía. Verifica la ruta a GD_v1.xlsx.</p>"
+        for label, value in catalog_counts.items()
+    )
+
+    if not stats_ready:
+        stats_html = "<p class='empty'>Catálogos no cargados todavía. Verifica la ruta a GD_v1.xlsx.</p>"
 
     tabs_html = "".join(
         f"<span class='tab-chip'>{tab}</span>" for tab in legacy_tabs
@@ -245,15 +250,15 @@ def landing_page():
                 <div class='hero-meta'>
                     <div class='meta-card'>
                         <strong>Catálogos activos</strong>
-                        <span>{len(stats) if stats_ready else '–'}</span>
+                        <span>{_render_value(sum(1 for v in catalog_counts.values() if v))}</span>
                     </div>
                     <div class='meta-card'>
                         <strong>Equipos en mapeo</strong>
-                        <span>{catalog_counts['células'] or '–'}</span>
+                        <span>{_render_value(catalog_counts['células'])}</span>
                     </div>
                     <div class='meta-card'>
                         <strong>Dependencias conocidas</strong>
-                        <span>{catalog_counts['dependencias'] or '–'}</span>
+                        <span>{_render_value(catalog_counts['dependencias'])}</span>
                     </div>
                 </div>
             </div>

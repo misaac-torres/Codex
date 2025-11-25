@@ -173,7 +173,7 @@ def landing_page():
         for label, value in stats.items()
     )
 
-    return f"""
+    html = """
     <!DOCTYPE html>
     <html lang='es'>
     <head>
@@ -448,6 +448,20 @@ def landing_page():
     </body>
     </html>
     """
+
+    replacements = {
+        "primary": primary,
+        "navy": navy,
+        "gradient": gradient,
+        "cards_html": cards_html,
+        "tabs_html": tabs_html,
+        "stats_html": stats_html,
+    }
+
+    for key, value in replacements.items():
+        html = html.replace(f"{{{key}}}", value)
+
+    return html
 
 @app.get("/health")
 def health():

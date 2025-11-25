@@ -25,5 +25,11 @@ pip install -r requirements.txt
 
 Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`.
 
+### Troubleshooting
+- **`ModuleNotFoundError: No module named 'uvicorn'`**
+  - Make sure you install dependencies with the same interpreter you plan to run: `python -m pip install -r requirements.txt` (repeat after activating `.venv`).
+  - If the `uvicorn` shim still fails, call it through the interpreter to avoid PATH mixups: `python -m uvicorn gd.api:app --reload --host 0.0.0.0 --port 8000`.
+  - Double-check you are using the intended environment: `which python` should point to `.venv/bin/python` and `python -m pip show uvicorn` should list the package.
+
 ## Notebook (legacy)
 You can still open `GDv1.ipynb` in Jupyter if you want the ipywidgets UI. Ensure the Excel file and logo are reachable via the same environment variables described above. The notebook will refresh catalogs from the `Datos` sheet and validate dependency column mappings on startup.

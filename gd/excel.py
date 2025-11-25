@@ -27,7 +27,22 @@ def load_workbook(path: Path = EXCEL_PATH) -> openpyxl.Workbook:
     """Open the workbook and validate required sheets."""
     if not path.exists():
         raise FileNotFoundError(f"No se encontró el archivo: {path}")
-    wb = openpyxl.load_workbook(path, keep_vba=False)
+    # Guard against unsupported binary formats (e.g., .xlsb) early so the error
+    # message is clearer for Swagger/CLI users.
+    allowed_suffixes = {".xlsx", ".xlsm", ".xltx", ".xltm"}
+    if path.suffix.lower() not in allowed_suffixes:
+        raise ValueError(
+            "Formato de Excel no soportado. Usa un archivo .xlsx/.xlsm (no binario como .xlsb): "
+            f"{path}"
+        )
+
+    try:
+        wb = openpyxl.load_workbook(path, keep_vba=False)
+    except openpyxl.utils.exceptions.InvalidFileException as exc:
+        raise ValueError(
+            "No se pudo abrir el Excel. Asegúrate de que no sea un archivo binario (.xlsb) y de que esté válido: "
+            f"{path}"
+        ) from exc
     ensure_required_sheets(wb.sheetnames)
     return wb
 

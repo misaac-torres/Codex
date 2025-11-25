@@ -1,13 +1,16 @@
 """FastAPI surface for the GD backend logic."""
 from __future__ import annotations
 
+from pathlib import Path
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from . import catalogs, config, metrics, projects, suggestions
-from .models import Dependency, Project, Catalogs
+from .models import Catalogs, Dependency, Project
 
 
 class DependencyPayload(BaseModel):
@@ -76,7 +79,10 @@ class SuggestionPayload(BaseModel):
     texto: str
 
 
-app = FastAPI(title="GD Excel API", version="1.0.0")
+STATIC_DIR = Path(__file__).parent / "static"
+
+app = FastAPI(title="GD Excel API", version="1.0.0", docs_url=None, redoc_url=None)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 try:
     _catalogs = catalogs.load_catalogs()
@@ -94,6 +100,56 @@ def _require_dep_mapping():
 @app.get("/health")
 def health():
     return {"status": "ok", "paths": config.describe_active_paths()}
+
+
+@app.get("/docs", include_in_schema=False)
+def custom_docs() -> HTMLResponse:
+    hero_html = """
+    <header class="gd-hero">
+      <div class="gd-hero__badge">GDv1 heritage</div>
+      <h1>Gestión de Demanda Experience</h1>
+      <p>
+        Explora y prueba la API que trae la esencia de la interfaz GDv1 a un flujo moderno.
+        Lanza entornos de prueba, captura métricas y conecta dependencias desde un solo lugar.
+      </p>
+      <div class="gd-hero__actions">
+        <a class="gd-btn" href="#swagger-ui">Ir al catálogo de endpoints</a>
+        <a class="gd-link" href="/health">Verificar estado inmediato</a>
+      </div>
+    </header>
+    """
+
+    html = f"""<!DOCTYPE html>
+    <html>
+    <head>
+        <title>GD Experience | Telefónica</title>
+        <link rel="stylesheet" type="text/css" href="/static/swagger-custom.css">
+        <link rel="icon" type="image/svg+xml" href="/static/telefonica-favicon.svg" />
+    </head>
+    <body>
+        {hero_html}
+        <div id="swagger-ui"></div>
+        <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+        <script>
+        const ui = SwaggerUIBundle({{
+            url: '{app.openapi_url}',
+            dom_id: '#swagger-ui',
+            layout: 'StandaloneLayout',
+            docExpansion: 'list',
+            defaultModelsExpandDepth: -1,
+            displayRequestDuration: true,
+            persistAuthorization: true,
+            deepLinking: true,
+            filter: true,
+            presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+        }});
+        window.ui = ui;
+        </script>
+    </body>
+    </html>"""
+
+    return HTMLResponse(html)
 
 
 @app.get("/catalogs")

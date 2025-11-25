@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+
+:root {
+  --telefonica-blue: #00b4e6;
+  --telefonica-deep: #003245;
+  --telefonica-sand: #f2f7f9;
+  --telefonica-ink: #0a1f2c;
+  --telefonica-emerald: #00e6a0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Manrope', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at 20% 20%, rgba(0, 230, 160, 0.12), transparent 35%),
+              radial-gradient(circle at 80% 0%, rgba(0, 180, 230, 0.18), transparent 45%),
+              var(--telefonica-sand);
+  color: var(--telefonica-ink);
+}
+
+.gd-hero {
+  padding: 40px 48px 32px;
+  background: linear-gradient(135deg, rgba(0, 180, 230, 0.1), rgba(0, 50, 69, 0.85)),
+              radial-gradient(circle at 20% 40%, rgba(0, 230, 160, 0.2), transparent 30%),
+              var(--telefonica-deep);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.16);
+}
+
+.gd-hero::after {
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35), transparent 70%);
+  filter: blur(6px);
+}
+
+.gd-hero h1 {
+  margin: 12px 0 8px;
+  font-size: 32px;
+  letter-spacing: -0.4px;
+}
+
+.gd-hero p {
+  margin: 0;
+  max-width: 780px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.gd-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(0, 230, 160, 0.18);
+  color: #d9fff4;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 230, 160, 0.6);
+}
+
+.gd-hero__actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.gd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: linear-gradient(120deg, var(--telefonica-emerald), var(--telefonica-blue));
+  color: #00151d;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0, 180, 230, 0.35);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.gd-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(0, 230, 160, 0.35);
+}
+
+.gd-link {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding-bottom: 4px;
+}
+
+#swagger-ui {
+  max-width: 1200px;
+  margin: 32px auto 64px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(0, 18, 28, 0.08);
+  padding: 12px 26px 32px;
+}
+
+.swagger-ui .topbar {
+  display: none;
+}
+
+.swagger-ui .opblock.opblock-post {
+  border-color: rgba(0, 180, 230, 0.45);
+  background: linear-gradient(180deg, rgba(0, 180, 230, 0.06), transparent);
+}
+
+.swagger-ui .opblock.opblock-get {
+  border-color: rgba(0, 230, 160, 0.45);
+  background: linear-gradient(180deg, rgba(0, 230, 160, 0.06), transparent);
+}
+
+.swagger-ui .btn.execute {
+  background: linear-gradient(120deg, var(--telefonica-emerald), var(--telefonica-blue));
+  color: #00151d;
+  border: none;
+  font-weight: 800;
+}
+
+.swagger-ui .btn.authorize span {
+  color: var(--telefonica-ink);
+}
+
+.swagger-ui .opblock-summary-control {
+  border-radius: 12px;
+}
+
+.swagger-ui section.models .model-box-control, .swagger-ui .opblock-tag {
+  color: var(--telefonica-deep);
+  font-weight: 700;
+}
+
+.swagger-ui .response-col_description__inner span.markdown, .swagger-ui .opblock-description-wrapper p {
+  color: var(--telefonica-ink);
+}
+
+.swagger-ui .info .title {
+  color: var(--telefonica-deep);
+  font-weight: 800;
+}
+
+.swagger-ui .markdown code, .swagger-ui pre { 
+  background: #0a1f2c;
+  color: #d9fff4;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .gd-hero {
+    padding: 32px 24px;
+  }
+
+  #swagger-ui {
+    margin: 24px 12px 42px;
+    padding: 12px 16px 24px;
+  }
+}

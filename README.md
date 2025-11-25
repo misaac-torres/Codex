@@ -7,6 +7,7 @@ This repository now contains a reusable Python package (`gd/`) extracted from th
 - `requirements.txt` lists the runtime dependencies (`openpyxl`, `fastapi`, `uvicorn`).
 - Key environment variables:
   - `GD_EXCEL_PATH` → location of `GD_v1.xlsx` (defaults to the copy in this repo)
+    - Only non-binary Excel formats are supported (e.g., `.xlsx`/`.xlsm`; not `.xlsb`).
   - `GD_LOGO_PATH` → optional path to the Telefónica logo image
 
 ### Using the FastAPI server
@@ -24,17 +25,24 @@ pip install -r requirements.txt
 ```
 
 Endpoints include `/health`, `/catalogs`, `/projects` (create/update by row), `/metrics`, and `/suggestions`.
+The `/docs` route now ships a Telefónica-styled Swagger UI with a short hero banner inspired by the legacy GDv1 experience; once the server is running you can navigate there for a one-click, try-it-out friendly front end.
 
 ### One-click test environment
 Run the included helper to provision dependencies and start the FastAPI server in one step:
 ```bash
 ./deploy_test_env.sh
 ```
+
+If you only need the Telefónica-styled Swagger UI for the user front, use the short alias:
+```bash
+./deploy_user_front.sh
+```
 Optional environment variables:
 - `VENV_DIR` → override the virtualenv location (default: `.venv` at the repo root)
 - `PYTHON_BIN` → choose which Python interpreter to use (default: `python3`)
 - `PORT` → change the exposed port (default: `8000`)
 - `GD_EXCEL_PATH`/`GD_LOGO_PATH` → override workbook and logo paths (auto-detected if not set)
+  - A lightweight SVG favicon is bundled at `gd/static/telefonica-favicon.svg` to avoid binary assets in PRs; point `GD_LOGO_PATH` to your own SVG/PNG if you prefer.
 
 ### Troubleshooting
 - **`ModuleNotFoundError: No module named 'uvicorn'`**

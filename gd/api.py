@@ -531,6 +531,15 @@ def create_project(payload: ProjectPayload):
     return {"row": row, "id": proj_id}
 
 
+@app.get("/projects")
+def list_projects(q: Optional[str] = None):
+    names = projects.get_all_project_names()
+    if q:
+        qn = q.strip().lower()
+        names = [n for n in names if qn in n.lower()]
+    return {"count": len(names), "items": names}
+
+
 @app.get("/projects/{nombre}")
 def get_project(nombre: str):
     dep_mapping = _require_dep_mapping()
@@ -559,3 +568,14 @@ def get_metrics(scope: str = "all", filter_value: Optional[str] = None):
 def send_suggestion(payload: SuggestionPayload):
     suggestions.append_suggestion(payload.usuario, payload.texto)
     return {"status": "ok"}
+
+
+@app.get("/teams/{equipo}")
+def get_team_summary(equipo: str):
+    dep_mapping = _require_dep_mapping()
+    return projects.summarize_by_equipo(equipo, dep_mapping)
+
+
+@app.get("/suggestions")
+def list_suggestions(limit: int = 5):
+    return suggestions.get_last_suggestions(limit=limit)
